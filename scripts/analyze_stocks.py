@@ -75,7 +75,7 @@ def generate_analysis(data):
 
 def main():
     if not os.path.exists("output"):
-    os.makedirs("output")
+        os.makedirs("output")
     results = []
     for symbol in STOCKS:
         print(f"Analyzing {symbol}...")
