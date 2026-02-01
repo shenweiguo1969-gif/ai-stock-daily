@@ -9,8 +9,21 @@ import pandas as pd
 DASHSCOPE_API_KEY = os.getenv("DASHSCOPE_API_KEY")
 Generation.api_key = DASHSCOPE_API_KEY
 
-# 股票列表（仅 A 股，使用 6 位数字代码）
-STOCKS = ["600519", "000858", "300750", "601318", "002594"]  # 示例：茅台、五粮液、宁德时代等
+def load_stock_list():
+    """从 STOCKS.txt 加载股票代码（每行一个6位A股代码）"""
+    try:
+        with open("STOCKS.txt", "r", encoding="utf-8") as f:
+            stocks = [
+                line.strip()
+                for line in f
+                if line.strip() and not line.startswith("#")
+            ]
+        return stocks
+    except FileNotFoundError:
+        print("⚠️ 未找到 STOCKS.txt，使用默认股票池")
+        return ["600519", "000858", "300750"]
+
+STOCKS = load_stock_list()
 
 def calculate_rsi(prices, window=14):
     delta = prices.diff()
@@ -22,7 +35,6 @@ def calculate_rsi(prices, window=14):
 
 def get_stock_data(symbol):
     try:
-        # 获取 A 股历史数据（前复权）
         df = ak.stock_zh_a_hist(
             symbol=symbol,
             period="daily",
@@ -32,7 +44,6 @@ def get_stock_data(symbol):
         if df.empty:
             return None
 
-        # 重命名中文列为英文
         df.rename(columns={
             '日期': 'date',
             '开盘': 'open',
@@ -42,7 +53,6 @@ def get_stock_data(symbol):
             '成交量': 'volume'
         }, inplace=True)
 
-        # 转换数值类型并清理无效数据
         df['close'] = pd.to_numeric(df['close'], errors='coerce')
         df['volume'] = pd.to_numeric(df['volume'], errors='coerce')
         df.dropna(subset=['close', 'volume'], inplace=True)
@@ -70,7 +80,7 @@ def get_stock_data(symbol):
         }
 
     except Exception:
-        return None  # 静默失败，不打印错误（生产环境推荐）
+        return None
 
 def generate_analysis(data):
     prompt = f"""
@@ -102,7 +112,6 @@ def generate_analysis(data):
         return "分析服务异常"
 
 def main():
-    # 确保 output 目录存在
     os.makedirs("output", exist_ok=True)
 
     results = []
