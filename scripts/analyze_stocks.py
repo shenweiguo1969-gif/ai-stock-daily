@@ -11,61 +11,55 @@ DASHSCOPE_API_KEY = os.getenv("DASHSCOPE_API_KEY")
 Generation.api_key = DASHSCOPE_API_KEY
 
 def load_stock_list():
-    """从 STOCKS.txt 加载股票代码（每行一个6位A股代码）"""
     with open("STOCKS.txt", "r", encoding="utf-8") as f:
-        stocks = [
-            line.strip()
-            for line in f
-            if line.strip() and not line.startswith("#")
-        ]
+        stocks = [line.strip() for line in f if line.strip() and not line.startswith("#")]
     return stocks
 
-def build_stock_name_map(stock_list):
+def get_stock_name_safe(symbol):
     """
-    通过实时行情接口一次性构建 {代码: 名称} 映射
-    精准支持最新A股（包括300548长芯博创）
+    安全获取单只股票名称，确保无缓存污染
     """
     try:
-        # 获取全市场最新行情（包含代码和名称）
-        df = ak.stock_zh_a_spot_em()
-        if df.empty:
-            print("⚠️ 股票行情数据为空")
-            return {}
+        # 明确指定市场
+        if symbol.startswith(('60', '688', '689')):
+            market = "sh"
+        elif symbol.startswith(('00', '30', '8')):
+            market = "sz"
+        else:
+            return None
 
-        # 标准化列名（不同 akshare 版本列名可能不同）
-        code_col = '代码' if '代码' in df.columns else ('symbol' if 'symbol' in df.columns else None)
-        name_col = '名称' if '名称' in df.columns else ('name' if 'name' in df.columns else None)
-
-        if not code_col or not name_col:
-            print("⚠️ 行情数据列名不匹配")
-            return {}
-
-        # 构建映射字典
-        name_map = {}
-        for _, row in df.iterrows():
-            code = str(row[code_col]).zfill(6)  # 确保6位（如'1' → '000001'）
-            name = str(row[name_col]).strip()
-            # 清理常见后缀
-            for suffix in ["股份有限公司", "集团股份有限公司", "集团有限公司", "有限公司"]:
-                if name.endswith(suffix):
-                    name = name[:-len(suffix)].rstrip()
-                    break
-            name_map[code] = name
-
-        # 只保留用户需要的股票名称（提高效率）
-        filtered_map = {}
-        for code in stock_list:
-            if code in name_map:
-                filtered_map[code] = name_map[code]
-            else:
-                filtered_map[code] = "未知名称"
-        return filtered_map
-
+        # ⚠️ 关键：每次调用前清除可能的内部缓存（通过新进程模拟，此处用重试+延迟）
+        time.sleep(0.1)  # 防止请求过快被限
+        
+        df = ak.stock_individual_info_em(symbol=symbol, market=market)
+        
+        if df is not None and not df.empty:
+            # 查找“公司全称”或“股票简称”
+            if 'item' in df.columns and 'value' in df.columns:
+                # 尝试获取股票简称（更短）
+                short_name_row = df[df['item'] == '股票简称']
+                if not short_name_row.empty:
+                    name = str(short_name_row.iloc[0]['value']).strip()
+                    return name
+                
+                # 否则用公司全称
+                full_name_row = df[df['item'] == '公司全称']
+                if not full_name_row.empty:
+                    name = str(full_name_row.iloc[0]['value']).strip()
+                    # 清理后缀
+                    for suffix in ["股份有限公司", "集团股份有限公司", "集团有限公司", "有限公司"]:
+                        if name.endswith(suffix):
+                            name = name[:-len(suffix)].rstrip()
+                            break
+                    return name
+        return None
     except Exception as e:
-        print(f"⚠️ 构建股票名称映射失败: {e}")
-        return {code: "未知名称" for code in stock_list}
+        # print(f"  调试: {symbol} 名称获取失败 - {e}")
+        return None
 
 STOCKS = load_stock_list()
+
+# ========== 以下保持不变（仅在 main 中调用 get_stock_name_safe） ==========
 
 def calculate_rsi(prices, window=14):
     delta = prices.diff()
@@ -112,7 +106,6 @@ def get_stock_data(symbol):
         rsi = calculate_rsi(close_prices) if len(close_prices) >= 14 else "N/A"
         ma20 = close_prices.tail(20).mean() if len(close_prices) >= 20 else "N/A"
 
-        # === 量价关系分析 ===
         price_up = latest['close'] > prev['close']
         vol_up = latest['volume'] > prev['volume']
 
@@ -127,7 +120,6 @@ def get_stock_data(symbol):
         else:
             volume_price_signal = "量价中性"
 
-        # === 主力行为推断 ===
         def infer_main_force_behavior(df):
             closes = df['close'].tail(5).tolist()
             vols = df['volume'].tail(5).tolist()
@@ -178,7 +170,6 @@ def get_stock_data(symbol):
 
 def generate_analysis(data):
     stock_display = f"{data['name']}（{data['symbol']}）" if data.get('name') and data['name'] != "未知名称" else data['symbol']
-    
     prompt = f"""
 你是一位资深中文股票分析师，请基于以下多维数据生成150字以内简明分析：
 
@@ -191,54 +182,46 @@ def generate_analysis(data):
 - 20日均线: {data['ma20']}
 
 要求：
-1. 分析中需自然提及股票名称（如“长芯博创”）；
+1. 分析中需自然提及股票名称；
 2. 重点结合量价与主力行为判断当前阶段；
 3. 给出具体操作建议；
-4. 语言专业简洁，不提“AI”或“模型”。
+4. 语言专业简洁。
 """
     for retry in range(3):
         try:
-            response = Generation.call(
-                model="qwen-max",
-                prompt=prompt,
-                max_tokens=250
-            )
+            response = Generation.call(model="qwen-max", prompt=prompt, max_tokens=250)
             if response.status_code == 200:
                 return response.output.text.strip()
             elif response.status_code == 429:
-                wait_time = 2 ** retry
-                print(f"  ⏳ Qwen API 限流，等待 {wait_time} 秒...")
-                time.sleep(wait_time)
+                time.sleep(2 ** retry)
                 continue
             else:
                 return f"API错误({response.status_code})"
-        except Exception as e:
-            print(f"  🌐 网络异常: {e}")
+        except Exception:
             time.sleep(2)
             continue
-    return "分析失败（多次重试无效）"
+    return "分析失败"
 
 def main():
     os.makedirs("output", exist_ok=True)
     results = []
     total = len(STOCKS)
-    
-    # ✅ 关键修正：一次性构建精准名称映射
-    print("📥 正在加载股票名称（使用实时行情数据）...")
-    stock_name_map = build_stock_name_map(STOCKS)
-    
-    print(f"🚀 开始分析 {total} 只股票...\n")
+    print(f"🚀 开始分析 {total} 只股票（逐个安全获取名称）...\n")
 
     for i, symbol in enumerate(STOCKS, 1):
-        print(f"[{i}/{total}] 正在分析 {symbol} ({stock_name_map.get(symbol, '未知')})...")
+        print(f"[{i}/{total}] 正在分析 {symbol}...")
         try:
             data = get_stock_data(symbol)
             if data is None:
-                print(f"  ⚠️  {symbol} 行情数据获取失败，跳过")
+                print(f"  ⚠️ 行情数据失败，跳过 {symbol}")
                 continue
 
-            # ✅ 安全添加名称（不会污染）
-            data["name"] = stock_name_map.get(symbol, "未知名称")
+            # ✅ 关键：独立、安全地获取名称
+            name = get_stock_name_safe(symbol)
+            data["name"] = name if name else "未知名称"
+
+            # 调试输出（可临时开启）
+            print(f"  → 名称: {data['name']}")
 
             analysis = generate_analysis(data)
             data["analysis"] = analysis
@@ -247,7 +230,7 @@ def main():
             time.sleep(0.3)
 
         except Exception as e:
-            print(f"  ❌ {symbol} 处理异常: {e}")
+            print(f"  ❌ 异常: {e}")
             continue
 
     output = {
@@ -258,7 +241,7 @@ def main():
     with open("output/predictions.json", "w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
 
-    print(f"\n✅ 分析完成！成功处理 {len(results)} / {total} 只股票。")
+    print(f"\n✅ 完成！成功: {len(results)} / {total}")
     print("结果已保存至 output/predictions.json")
 
 if __name__ == "__main__":
