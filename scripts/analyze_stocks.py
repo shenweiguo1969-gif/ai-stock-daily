@@ -68,7 +68,6 @@ def get_stock_data(symbol):
         ma20 = close_prices.tail(20).mean() if len(close_prices) >= 20 else "N/A"
 
         # === 量价关系分析 ===
-        vol_5d_avg = volumes.tail(5).mean()
         price_up = latest['close'] > prev['close']
         vol_up = latest['volume'] > prev['volume']
 
@@ -83,20 +82,43 @@ def get_stock_data(symbol):
         else:
             volume_price_signal = "量价中性"
 
-        # === 资金流向分析 ===
-        fund_direction = "数据暂无"
-        net_inflow = "N/A"
-        try:
-            market = "sh" if symbol.startswith(("60", "68")) else "sz"
-            fund_df = ak.stock_individual_fund_flow(stock=symbol, market=market)
-            if not fund_df.empty:
-                inflow_str = fund_df.iloc[0]['主力净流入-净额']
-                if isinstance(inflow_str, str) and '万' in inflow_str:
-                    net_inflow_val = float(inflow_str.replace('万', '').replace(',', ''))
-                    net_inflow = f"{net_inflow_val:.1f}"
-                    fund_direction = "资金净流入" if net_inflow_val > 0 else "资金净流出"
-        except Exception:
-            pass
+        # === 【核心升级】基于量价结构推断主力行为 ===
+        def infer_main_force_behavior(df):
+            closes = df['close'].tail(5).tolist()
+            vols = df['volume'].tail(5).tolist()
+            if len(closes) < 5:
+                return "数据不足"
+            
+            latest_close = closes[-1]
+            latest_vol = vols[-1]
+            avg_vol_5d = sum(vols) / 5
+            high_vol = latest_vol > avg_vol_5d * 1.5
+            low_vol = latest_vol < avg_vol_5d * 0.7
+
+            # 近5日涨幅
+            pct_5d = (latest_close - closes[0]) / closes[0] if closes[0] != 0 else 0
+
+            # 特征判断
+            is_new_high = latest_close == max(closes)
+            recent_pullback = len(closes) >= 3 and closes[-2] < closes[-3] and latest_close > closes[-2]
+            pullback_low_vol = len(vols) >= 2 and vols[-2] < avg_vol_5d * 0.7
+
+            if pct_5d > 0.05 and high_vol and is_new_high:
+                return "强势拉升（放量突破新高）"
+            elif abs(pct_5d) < 0.02 and latest_vol == min(vols):
+                return "低位吸筹（横盘缩量）"
+            elif recent_pullback and pullback_low_vol and latest_close > closes[-3]:
+                return "健康洗盘（回调缩量后回升）"
+            elif latest_close < closes[-2] and high_vol and (closes[-2] - latest_close) / closes[-2] > 0.03:
+                return "放量下跌（警惕派发风险）"
+            elif latest_close > closes[-2] and high_vol:
+                return "放量上涨（主力积极介入）"
+            elif latest_close > ma20 and low_vol and price_up:
+                return "温和推升（惜售明显）"
+            else:
+                return "震荡整理（方向待明）"
+
+        main_force_signal = infer_main_force_behavior(df)
 
         return {
             "symbol": symbol,
@@ -107,8 +129,7 @@ def get_stock_data(symbol):
             "ma20": round(ma20, 2) if isinstance(ma20, float) else ma20,
             "last_5_days": close_prices.tail(5).round(2).tolist(),
             "volume_price_signal": volume_price_signal,
-            "fund_direction": fund_direction,
-            "net_inflow": net_inflow,
+            "main_force_signal": main_force_signal,  # 替代资金流
         }
 
     except Exception:
@@ -122,15 +143,15 @@ def generate_analysis(data):
 - 当前价格: ¥{data['price']} | 涨跌幅: {data['change_pct']}%
 - 近5日走势: {data['last_5_days']}
 - 量价关系: {data['volume_price_signal']}
-- 资金流向: {data['fund_direction']}（净流入/出: {data['net_inflow']}万）
+- 主力行为推断: {data['main_force_signal']}
 - RSI: {data['rsi']}（>70超买，<30超卖）
 - 20日均线: {data['ma20']}
 
 要求：
-1. 优先解读「量价配合」和「主力资金动向」；
-2. 判断当前是「吸筹」「拉升」「派发」还是「洗盘」阶段；
-3. 给出操作建议（如“可逢低布局”、“警惕高位放量滞涨”）；
-4. 语言专业简洁，避免术语堆砌，不提“AI”或“模型”。
+1. 重点结合「量价配合」和「主力行为阶段」进行研判；
+2. 明确指出当前处于「吸筹」「拉升」「洗盘」还是「派发」阶段；
+3. 给出具体操作建议（如“可逢低布局”、“警惕高位放量滞涨”）；
+4. 语言专业简洁，避免空泛表述，不提“AI”或“模型”。
 """
     for retry in range(3):
         try:
@@ -142,7 +163,7 @@ def generate_analysis(data):
             if response.status_code == 200:
                 return response.output.text.strip()
             elif response.status_code == 429:
-                wait_time = 2 ** retry  # 1s, 2s, 4s
+                wait_time = 2 ** retry
                 print(f"  ⏳ Qwen API 限流，等待 {wait_time} 秒...")
                 time.sleep(wait_time)
                 continue
@@ -173,8 +194,7 @@ def main():
             data["analysis"] = analysis
             results.append(data)
 
-            # 防止 Qwen API 限流
-            time.sleep(0.3)
+            time.sleep(0.3)  # 防止 API 限流
 
         except Exception as e:
             print(f"  ❌ {symbol} 处理异常: {e}")
