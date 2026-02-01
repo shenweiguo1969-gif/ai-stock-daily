@@ -1,4 +1,4 @@
-akshare==2.100.0
+akshare>=2.18.0
 yfinance==0.2.37
 dashscope==1.20.0
 pandas==2.2.0
