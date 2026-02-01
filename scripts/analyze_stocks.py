@@ -66,7 +66,7 @@ def get_stock_data(symbol):
         rsi = calculate_rsi(close_prices) if len(close_prices) >= 14 else "N/A"
         ma20 = close_prices.tail(20).mean() if len(close_prices) >= 20 else "N/A"
 
-        # === 量价关系 ===
+        # === 量价关系分析 ===
         vol_5d_avg = volumes.tail(5).mean()
         price_up = latest['close'] > prev['close']
         vol_up = latest['volume'] > prev['volume']
@@ -82,7 +82,7 @@ def get_stock_data(symbol):
         else:
             volume_price_signal = "量价中性"
 
-        # === 资金流向 ===
+        # === 资金流向分析 ===
         fund_direction = "数据暂无"
         net_inflow = "N/A"
         try:
@@ -95,7 +95,7 @@ def get_stock_data(symbol):
                     net_inflow = f"{net_inflow_val:.1f}"
                     fund_direction = "资金净流入" if net_inflow_val > 0 else "资金净流出"
         except Exception:
-            pass
+            pass  # 忽略资金流异常
 
         return {
             "symbol": symbol,
@@ -147,4 +147,19 @@ def generate_analysis(data):
 def main():
     os.makedirs("output", exist_ok=True)
     results = []
-    for symbol in STOC
+    for symbol in STOCKS:
+        data = get_stock_data(symbol)
+        if data:
+            analysis = generate_analysis(data)
+            data["analysis"] = analysis
+            results.append(data)
+
+    output = {
+        "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "stocks": results
+    }
+    with open("output/predictions.json", "w", encoding="utf-8") as f:
+        json.dump(output, f, ensure_ascii=False, indent=2)
+
+if __name__ == "__main__":
+    main()
