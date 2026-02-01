@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <title>每日股票分析</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .stock { border: 1px solid #ccc; padding: 15px; margin: 10px 0; border-radius: 8px; }
+    .title { color: #333; font-size: 1.2em; }
+    .analysis { color: #007bff; font-style: italic; }
+  </style>
+</head>
+<body>
+  <h1>每日股票分析</h1>
+  <div id="results"></div>
+
+  <script>
+    fetch('output/predictions.json')
+      .then(response => response.json())
+      .then(data => {
+        const container = document.getElementById('results');
+        data.stocks.forEach(stock => {
+          const div = document.createElement('div');
+          div.className = 'stock';
+          div.innerHTML = `
+            <div class="title">股票代码: ${stock.symbol}</div>
+            <p>当前价格: ¥${stock.price}</p>
+            <p>涨跌幅: ${stock.change_pct}%</p>
+            <p>RSI: ${stock.rsi} | 20日均线: ${stock.ma20}</p>
+            <p class="analysis">AI 分析: ${stock.analysis}</p>
+          `;
+          container.appendChild(div);
+        });
+      })
+      .catch(err => console.error("加载失败:", err));
+  </script>
+</body>
+</html>
