@@ -1,5 +1,6 @@
 import os
 import json
+import time
 from datetime import datetime
 from dashscope import Generation
 import akshare as ak
@@ -95,7 +96,7 @@ def get_stock_data(symbol):
                     net_inflow = f"{net_inflow_val:.1f}"
                     fund_direction = "资金净流入" if net_inflow_val > 0 else "资金净流出"
         except Exception:
-            pass  # 忽略资金流异常
+            pass
 
         return {
             "symbol": symbol,
@@ -131,35 +132,64 @@ def generate_analysis(data):
 3. 给出操作建议（如“可逢低布局”、“警惕高位放量滞涨”）；
 4. 语言专业简洁，避免术语堆砌，不提“AI”或“模型”。
 """
-    try:
-        response = Generation.call(
-            model="qwen-max",
-            prompt=prompt,
-            max_tokens=250
-        )
-        if response.status_code == 200:
-            return response.output.text.strip()
-        else:
-            return "分析生成失败"
-    except Exception:
-        return "分析服务异常"
+    for retry in range(3):
+        try:
+            response = Generation.call(
+                model="qwen-max",
+                prompt=prompt,
+                max_tokens=250
+            )
+            if response.status_code == 200:
+                return response.output.text.strip()
+            elif response.status_code == 429:
+                wait_time = 2 ** retry  # 1s, 2s, 4s
+                print(f"  ⏳ Qwen API 限流，等待 {wait_time} 秒...")
+                time.sleep(wait_time)
+                continue
+            else:
+                return f"API错误({response.status_code})"
+        except Exception as e:
+            print(f"  🌐 网络异常: {e}")
+            time.sleep(2)
+            continue
+    return "分析失败（多次重试无效）"
 
 def main():
     os.makedirs("output", exist_ok=True)
     results = []
-    for symbol in STOCKS:
-        data = get_stock_data(symbol)
-        if data:
+    total = len(STOCKS)
+
+    print(f"🚀 开始分析 {total} 只股票...\n")
+
+    for i, symbol in enumerate(STOCKS, 1):
+        print(f"[{i}/{total}] 正在分析 {symbol}...")
+        try:
+            data = get_stock_data(symbol)
+            if data is None:
+                print(f"  ⚠️  {symbol} 行情数据获取失败，跳过")
+                continue
+
             analysis = generate_analysis(data)
             data["analysis"] = analysis
             results.append(data)
+
+            # 防止 Qwen API 限流
+            time.sleep(0.3)
+
+        except Exception as e:
+            print(f"  ❌ {symbol} 处理异常: {e}")
+            continue
 
     output = {
         "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "stocks": results
     }
+
     with open("output/predictions.json", "w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
+
+    print(f"\n✅ 分析完成！成功处理 {len(results)} / {total} 只股票。")
+    print("结果已保存至 output/predictions.json")
 
 if __name__ == "__main__":
     main()
