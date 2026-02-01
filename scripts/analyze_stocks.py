@@ -20,21 +20,28 @@ def load_stock_list():
         ]
     return stocks
 
-def load_stock_name_map():
-    """加载A股代码 -> 名称映射表"""
+def get_stock_name(symbol):
+    """
+    精准获取单只股票名称（支持最新A股）
+    返回：公司全称（如“长芯博创”），失败返回 None
+    """
     try:
-        df = ak.stock_info_a_code_name()
-        # 兼容不同版本 akshare 的列名
-        if 'code' in df.columns and 'name' in df.columns:
-            return dict(zip(df['code'], df['name']))
-        elif '证券代码' in df.columns and '证券简称' in df.columns:
-            return dict(zip(df['证券代码'], df['证券简称']))
-        else:
-            print("⚠️ 股票名称数据格式异常，使用空映射")
-            return {}
-    except Exception as e:
-        print(f"⚠️ 股票名称加载失败: {e}")
-        return {}
+        # 自动判断市场
+        market = "sz" if symbol.startswith(("00", "30")) else "sh"
+        df = ak.stock_individual_info_em(symbol=symbol, market=market)
+        if not df.empty and 'item' in df.columns and 'value' in df.columns:
+            name_row = df[df['item'] == '公司全称']
+            if not name_row.empty:
+                name = name_row.iloc[0]['value']
+                # 清理后缀（如“股份有限公司” → “长芯博创”）
+                for suffix in ["股份有限公司", "集团股份有限公司", "集团有限公司", "有限公司"]:
+                    if name.endswith(suffix):
+                        name = name[:-len(suffix)]
+                        break
+                return name.strip()
+        return None
+    except Exception:
+        return None
 
 STOCKS = load_stock_list()
 
@@ -98,7 +105,7 @@ def get_stock_data(symbol):
         else:
             volume_price_signal = "量价中性"
 
-        # === 主力行为推断（基于量价）===
+        # === 主力行为推断 ===
         def infer_main_force_behavior(df):
             closes = df['close'].tail(5).tolist()
             vols = df['volume'].tail(5).tolist()
@@ -148,8 +155,7 @@ def get_stock_data(symbol):
         return None
 
 def generate_analysis(data):
-    # 构建带股票名称的提示词
-    stock_display = f"{data['name']}（{data['symbol']}）" if data.get('name') and data['name'] != "未知名称" else data['symbol']
+    stock_display = f"{data['name']}（{data['symbol']}）" if data.get('name') else data['symbol']
     
     prompt = f"""
 你是一位资深中文股票分析师，请基于以下多维数据生成150字以内简明分析：
@@ -163,10 +169,10 @@ def generate_analysis(data):
 - 20日均线: {data['ma20']}
 
 要求：
-1. 分析中需自然提及股票名称（如“XX股份”）；
-2. 重点结合量价与主力行为判断当前阶段（吸筹/拉升/洗盘/派发）；
-3. 给出具体操作建议（如“可逢低布局”、“警惕高位放量滞涨”）；
-4. 语言专业简洁，避免空泛，不提“AI”或“模型”。
+1. 分析中需自然提及股票名称（如“长芯博创”）；
+2. 重点结合量价与主力行为判断当前阶段；
+3. 给出具体操作建议；
+4. 语言专业简洁，不提“AI”或“模型”。
 """
     for retry in range(3):
         try:
@@ -192,11 +198,6 @@ def generate_analysis(data):
 
 def main():
     os.makedirs("output", exist_ok=True)
-    
-    # ✅ 加载股票名称映射（仅一次）
-    print("📥 正在加载股票名称映射...")
-    stock_name_map = load_stock_name_map()
-    
     results = []
     total = len(STOCKS)
     print(f"🚀 开始分析 {total} 只股票...\n")
@@ -204,19 +205,21 @@ def main():
     for i, symbol in enumerate(STOCKS, 1):
         print(f"[{i}/{total}] 正在分析 {symbol}...")
         try:
+            # ✅ 先获取行情数据
             data = get_stock_data(symbol)
             if data is None:
                 print(f"  ⚠️  {symbol} 行情数据获取失败，跳过")
                 continue
 
-            # ✅ 添加股票名称
-            data["name"] = stock_name_map.get(symbol, "未知名称")
+            # ✅ 再精准获取名称（逐个查询，确保准确）
+            name = get_stock_name(symbol)
+            data["name"] = name if name else "未知名称"
 
             analysis = generate_analysis(data)
             data["analysis"] = analysis
             results.append(data)
 
-            time.sleep(0.3)
+            time.sleep(0.3)  # 防止 akshare + Qwen 双限流
 
         except Exception as e:
             print(f"  ❌ {symbol} 处理异常: {e}")
