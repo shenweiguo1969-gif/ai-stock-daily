@@ -1,8 +1,9 @@
 import os
 import json
-import yfinance as yf
 from datetime import datetime
 from dashscope import Generation
+import akshare as ak
+import pandas as pd
 
 # 配置 Qwen3
 DASHSCOPE_API_KEY = os.getenv("DASHSCOPE_API_KEY")
@@ -11,34 +12,6 @@ Generation.api_key = DASHSCOPE_API_KEY
 # 股票列表（支持 A股/港股/美股）
 STOCKS = ["AAPL", "TSLA", "600519.SS", "00700.HK"]
 
-def get_stock_data(symbol):
-    try:
-        ticker = yf.Ticker(symbol)
-        hist = ticker.history(period="30d")
-        if hist.empty:
-            print(f"⚠️  {symbol}: No price data found, symbol may be delisted or unavailable")
-            return None
-        
-        latest = hist.iloc[-1]
-        prev = hist.iloc[-2] if len(hist) > 1 else latest
-        rsi = calculate_rsi(hist['Close']) if len(hist) >= 14 else "N/A"
-        ma20 = hist['Close'].tail(20).mean() if len(hist) >= 20 else "N/A"
-        change_pct = ((latest['Close'] - prev['Close']) / prev['Close']) * 100
-
-        print(f"✅ {symbol}: Data fetched successfully")
-        return {
-            "symbol": symbol,
-            "price": round(latest['Close'], 2),
-            "change_pct": round(change_pct, 2),
-            "volume": int(latest['Volume']),
-            "rsi": round(rsi, 2) if isinstance(rsi, float) else rsi,
-            "ma20": round(ma20, 2) if isinstance(ma20, float) else ma20,
-            "last_5_days": hist['Close'].tail(5).round(2).tolist()
-        }
-    except Exception as e:
-        print(f"❌ {symbol}: Error fetching data: {e}")
-        return None
-
 def calculate_rsi(prices, window=14):
     delta = prices.diff()
     gain = (delta.where(delta > 0, 0)).rolling(window=window).mean()
@@ -46,6 +19,65 @@ def calculate_rsi(prices, window=14):
     rs = gain / loss
     rsi = 100 - (100 / (1 + rs))
     return rsi.iloc[-1]
+
+def get_stock_data(symbol):
+    try:
+        if symbol == "AAPL":
+            df = ak.stock_us_hist(symbol="AAPL", period="daily", start_date="20240101")
+            close_col = 'close'
+            volume_col = 'volume'
+        elif symbol == "TSLA":
+            df = ak.stock_us_hist(symbol="TSLA", period="daily", start_date="20240101")
+            close_col = 'close'
+            volume_col = 'volume'
+        elif symbol == "600519.SS":
+            df = ak.stock_zh_a_hist(symbol="600519", period="daily", start_date="20240101")
+            close_col = '收盘'
+            volume_col = '成交量'
+        elif symbol == "00700.HK":
+            df = ak.stock_hk_hist(symbol="00700", period="daily", start_date="20240101")
+            close_col = 'close'
+            volume_col = 'volume'
+        else:
+            print(f"❌ 不支持的股票代码: {symbol}")
+            return None
+
+        if df.empty:
+            print(f"⚠️  {symbol}: 未获取到价格数据")
+            return None
+
+        # 统一列名
+        df = df.rename(columns={close_col: 'close', volume_col: 'volume'})
+        df['close'] = pd.to_numeric(df['close'], errors='coerce')
+        df['volume'] = pd.to_numeric(df['volume'], errors='coerce')
+        df = df.dropna(subset=['close', 'volume']).reset_index(drop=True)
+
+        if len(df) < 2:
+            print(f"⚠️  {symbol}: 数据不足，无法计算涨跌幅")
+            return None
+
+        latest = df.iloc[-1]
+        prev = df.iloc[-2]
+        close_prices = df['close']
+
+        rsi = calculate_rsi(close_prices) if len(close_prices) >= 14 else "N/A"
+        ma20 = close_prices.tail(20).mean() if len(close_prices) >= 20 else "N/A"
+        change_pct = ((latest['close'] - prev['close']) / prev['close']) * 100
+
+        print(f"✅ {symbol}: 数据获取成功")
+        return {
+            "symbol": symbol,
+            "price": round(latest['close'], 2),
+            "change_pct": round(change_pct, 2),
+            "volume": int(latest['volume']),
+            "rsi": round(rsi, 2) if isinstance(rsi, float) else rsi,
+            "ma20": round(ma20, 2) if isinstance(ma20, float) else ma20,
+            "last_5_days": close_prices.tail(5).round(2).tolist()
+        }
+
+    except Exception as e:
+        print(f"❌ {symbol}: 获取数据时出错: {e}")
+        return None
 
 def generate_analysis(data):
     prompt = f"""
@@ -77,8 +109,10 @@ def generate_analysis(data):
         return f"调用异常: {str(e)}"
 
 def main():
+    # 自动创建 output 目录
     if not os.path.exists("output"):
         os.makedirs("output")
+
     results = []
     for symbol in STOCKS:
         print(f"Analyzing {symbol}...")
@@ -87,14 +121,16 @@ def main():
             analysis = generate_analysis(data)
             data["analysis"] = analysis
             results.append(data)
-    
+        else:
+            print(f"🚫 {symbol}: 跳过，无有效数据")
+
     output = {
         "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "stocks": results
     }
     with open("output/predictions.json", "w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
-    print("✅ 分析完成！")
+    print("✅ 分析完成！共生成 {} 条记录。".format(len(results)))
 
 if __name__ == "__main__":
     main()
