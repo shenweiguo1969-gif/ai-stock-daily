@@ -4,35 +4,77 @@
   <meta charset="UTF-8" />
   <title>每日股票分析</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    .stock { border: 1px solid #ccc; padding: 15px; margin: 10px 0; border-radius: 8px; }
-    .title { color: #333; font-size: 1.2em; }
-    .analysis { color: #007bff; font-style: italic; }
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f9f9f9; }
+    .header { text-align: center; margin-bottom: 20px; }
+    .btn-rebuild {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-rebuild:hover { background: #0056b3; }
+    .stock { 
+      background: white; 
+      border: 1px solid #ddd; 
+      padding: 15px; 
+      margin: 10px 0; 
+      border-radius: 8px; 
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .title { font-size: 1.2em; font-weight: bold; color: #333; }
+    .analysis { color: #007bff; font-style: italic; margin-top: 8px; }
+    .meta { color: #666; font-size: 0.9em; margin-top: 5px; }
   </style>
 </head>
 <body>
-  <h1>每日股票分析</h1>
+  <div class="header">
+    <h1>📊 每日股票分析</h1>
+    <!-- 一键重跑按钮 -->
+    <a href="https://github.com/shenweiguo1969-gif/ai-stock-daily/actions/workflows/daily-analysis.yml"
+       target="_blank"
+       class="btn-rebuild">
+      🔄 一键重跑分析
+    </a>
+    <p style="font-size: 0.9em; color: #888; margin-top: 8px;">
+      点击按钮跳转到 GitHub Actions 页面，手动触发一次分析任务
+    </p>
+  </div>
+
   <div id="results"></div>
 
   <script>
-    fetch('output/predictions.json')
+    fetch('output/predictions.json?t=' + Date.now())
       .then(response => response.json())
       .then(data => {
         const container = document.getElementById('results');
+        if (!data.stocks || data.stocks.length === 0) {
+          container.innerHTML = '<p>暂无分析数据，请稍后刷新或点击“重跑分析”。</p>';
+          return;
+        }
+        document.title = `每日股票分析（${data.generated_at}）`;
         data.stocks.forEach(stock => {
           const div = document.createElement('div');
           div.className = 'stock';
           div.innerHTML = `
             <div class="title">股票代码: ${stock.symbol}</div>
-            <p>当前价格: ¥${stock.price}</p>
-            <p>涨跌幅: ${stock.change_pct}%</p>
+            <p>当前价格: ¥${stock.price} | 涨跌幅: ${stock.change_pct}%</p>
             <p>RSI: ${stock.rsi} | 20日均线: ${stock.ma20}</p>
-            <p class="analysis">AI 分析: ${stock.analysis}</p>
+            <p class="analysis">💬 AI 分析: ${stock.analysis}</p>
+            <div class="meta">近5日: ${stock.last_5_days.join(', ')}</div>
           `;
           container.appendChild(div);
         });
       })
-      .catch(err => console.error("加载失败:", err));
+      .catch(err => {
+        document.getElementById('results').innerHTML = 
+          '<p style="color:red;">❌ 加载失败，请确保已启用 GitHub Pages 并生成 output/predictions.json</p>';
+        console.error("加载失败:", err);
+      });
   </script>
 </body>
 </html>
