@@ -74,6 +74,8 @@ def generate_analysis(data):
         return f"调用异常: {str(e)}"
 
 def main():
+    if not os.path.exists("output"):
+    os.makedirs("output")
     results = []
     for symbol in STOCKS:
         print(f"Analyzing {symbol}...")
