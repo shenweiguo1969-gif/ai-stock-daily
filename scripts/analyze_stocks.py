@@ -16,13 +16,16 @@ def get_stock_data(symbol):
         ticker = yf.Ticker(symbol)
         hist = ticker.history(period="30d")
         if hist.empty:
+            print(f"⚠️  {symbol}: No price data found, symbol may be delisted or unavailable")
             return None
+        
         latest = hist.iloc[-1]
         prev = hist.iloc[-2] if len(hist) > 1 else latest
-        # 计算 RSI
         rsi = calculate_rsi(hist['Close']) if len(hist) >= 14 else "N/A"
         ma20 = hist['Close'].tail(20).mean() if len(hist) >= 20 else "N/A"
         change_pct = ((latest['Close'] - prev['Close']) / prev['Close']) * 100
+
+        print(f"✅ {symbol}: Data fetched successfully")
         return {
             "symbol": symbol,
             "price": round(latest['Close'], 2),
@@ -33,7 +36,7 @@ def get_stock_data(symbol):
             "last_5_days": hist['Close'].tail(5).round(2).tolist()
         }
     except Exception as e:
-        print(f"Error fetching {symbol}: {e}")
+        print(f"❌ {symbol}: Error fetching data: {e}")
         return None
 
 def calculate_rsi(prices, window=14):
