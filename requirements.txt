@@ -1,5 +1,4 @@
 akshare==1.18.21
-yfinance==0.2.37
 dashscope==1.20.0
 pandas==2.2.0
 numpy==1.26.4
