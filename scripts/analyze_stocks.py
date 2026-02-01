@@ -5,12 +5,12 @@ from dashscope import Generation
 import akshare as ak
 import pandas as pd
 
-# 配置 Qwen3
+# 配置 Qwen3 API
 DASHSCOPE_API_KEY = os.getenv("DASHSCOPE_API_KEY")
 Generation.api_key = DASHSCOPE_API_KEY
 
-# 股票列表（支持 A股/港股/美股）
-STOCKS = ["AAPL", "TSLA", "600519.SS", "00700.HK"]
+# 股票列表（仅 A 股，使用 6 位数字代码）
+STOCKS = ["600519", "000858", "300750", "601318", "002594"]  # 示例：茅台、五粮液、宁德时代等
 
 def calculate_rsi(prices, window=14):
     delta = prices.diff()
@@ -22,38 +22,33 @@ def calculate_rsi(prices, window=14):
 
 def get_stock_data(symbol):
     try:
-        if symbol == "AAPL":
-            df = ak.stock_us_hist(symbol="AAPL", period="daily", start_date="20240101")
-            close_col = 'close'
-            volume_col = 'volume'
-        elif symbol == "TSLA":
-            df = ak.stock_us_hist(symbol="TSLA", period="daily", start_date="20240101")
-            close_col = 'close'
-            volume_col = 'volume'
-        elif symbol == "600519.SS":
-            df = ak.stock_zh_a_hist(symbol="600519", period="daily", start_date="20240101")
-            close_col = '收盘'
-            volume_col = '成交量'
-        elif symbol == "00700.HK":
-            df = ak.stock_hk_hist(symbol="00700", period="daily", start_date="20240101")
-            close_col = 'close'
-            volume_col = 'volume'
-        else:
-            print(f"❌ 不支持的股票代码: {symbol}")
-            return None
-
+        # 获取 A 股历史数据（前复权）
+        df = ak.stock_zh_a_hist(
+            symbol=symbol,
+            period="daily",
+            start_date="20240101",
+            adjust="qfq"
+        )
         if df.empty:
-            print(f"⚠️  {symbol}: 未获取到价格数据")
             return None
 
-        # 统一列名
-        df = df.rename(columns={close_col: 'close', volume_col: 'volume'})
+        # 重命名中文列为英文
+        df.rename(columns={
+            '日期': 'date',
+            '开盘': 'open',
+            '收盘': 'close',
+            '最高': 'high',
+            '最低': 'low',
+            '成交量': 'volume'
+        }, inplace=True)
+
+        # 转换数值类型并清理无效数据
         df['close'] = pd.to_numeric(df['close'], errors='coerce')
         df['volume'] = pd.to_numeric(df['volume'], errors='coerce')
-        df = df.dropna(subset=['close', 'volume']).reset_index(drop=True)
+        df.dropna(subset=['close', 'volume'], inplace=True)
+        df.reset_index(drop=True, inplace=True)
 
         if len(df) < 2:
-            print(f"⚠️  {symbol}: 数据不足，无法计算涨跌幅")
             return None
 
         latest = df.iloc[-1]
@@ -64,7 +59,6 @@ def get_stock_data(symbol):
         ma20 = close_prices.tail(20).mean() if len(close_prices) >= 20 else "N/A"
         change_pct = ((latest['close'] - prev['close']) / prev['close']) * 100
 
-        print(f"✅ {symbol}: 数据获取成功")
         return {
             "symbol": symbol,
             "price": round(latest['close'], 2),
@@ -75,15 +69,14 @@ def get_stock_data(symbol):
             "last_5_days": close_prices.tail(5).round(2).tolist()
         }
 
-    except Exception as e:
-        print(f"❌ {symbol}: 获取数据时出错: {e}")
-        return None
+    except Exception:
+        return None  # 静默失败，不打印错误（生产环境推荐）
 
 def generate_analysis(data):
     prompt = f"""
 你是一位专业的中文股票分析师，请根据以下数据生成一段150字以内的简明分析：
 - 股票代码: {data['symbol']}
-- 当前价格: ¥{data['price']}（若为美股则单位为美元）
+- 当前价格: ¥{data['price']}
 - 近5日收盘价: {data['last_5_days']}
 - RSI指标: {data['rsi']}（>70超买，<30超卖）
 - 20日均线: {data['ma20']}
@@ -104,25 +97,21 @@ def generate_analysis(data):
         if response.status_code == 200:
             return response.output.text.strip()
         else:
-            return f"分析失败（错误码: {response.code}）"
-    except Exception as e:
-        return f"调用异常: {str(e)}"
+            return "分析生成失败"
+    except Exception:
+        return "分析服务异常"
 
 def main():
-    # 自动创建 output 目录
-    if not os.path.exists("output"):
-        os.makedirs("output")
+    # 确保 output 目录存在
+    os.makedirs("output", exist_ok=True)
 
     results = []
     for symbol in STOCKS:
-        print(f"Analyzing {symbol}...")
         data = get_stock_data(symbol)
         if data:
             analysis = generate_analysis(data)
             data["analysis"] = analysis
             results.append(data)
-        else:
-            print(f"🚫 {symbol}: 跳过，无有效数据")
 
     output = {
         "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -130,7 +119,6 @@ def main():
     }
     with open("output/predictions.json", "w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
-    print("✅ 分析完成！共生成 {} 条记录。".format(len(results)))
 
 if __name__ == "__main__":
     main()
