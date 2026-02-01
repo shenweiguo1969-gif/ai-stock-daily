@@ -11,17 +11,13 @@ Generation.api_key = DASHSCOPE_API_KEY
 
 def load_stock_list():
     """从 STOCKS.txt 加载股票代码（每行一个6位A股代码）"""
-    try:
-        with open("STOCKS.txt", "r", encoding="utf-8") as f:
-            stocks = [
-                line.strip()
-                for line in f
-                if line.strip() and not line.startswith("#")
-            ]
-        return stocks
-    except FileNotFoundError:
-        print("⚠️ 未找到 STOCKS.txt，使用默认股票池")
-        return ["600519", "000858", "300750"]
+    with open("STOCKS.txt", "r", encoding="utf-8") as f:
+        stocks = [
+            line.strip()
+            for line in f
+            if line.strip() and not line.startswith("#")
+        ]
+    return stocks
 
 STOCKS = load_stock_list()
 
@@ -41,7 +37,7 @@ def get_stock_data(symbol):
             start_date="20240101",
             adjust="qfq"
         )
-        if df.empty:
+        if df.empty or len(df) < 5:
             return None
 
         df.rename(columns={
@@ -64,10 +60,42 @@ def get_stock_data(symbol):
         latest = df.iloc[-1]
         prev = df.iloc[-2]
         close_prices = df['close']
+        volumes = df['volume']
 
+        change_pct = ((latest['close'] - prev['close']) / prev['close']) * 100
         rsi = calculate_rsi(close_prices) if len(close_prices) >= 14 else "N/A"
         ma20 = close_prices.tail(20).mean() if len(close_prices) >= 20 else "N/A"
-        change_pct = ((latest['close'] - prev['close']) / prev['close']) * 100
+
+        # === 量价关系 ===
+        vol_5d_avg = volumes.tail(5).mean()
+        price_up = latest['close'] > prev['close']
+        vol_up = latest['volume'] > prev['volume']
+
+        if price_up and vol_up:
+            volume_price_signal = "价涨量增（趋势健康）"
+        elif not price_up and latest['volume'] < prev['volume']:
+            volume_price_signal = "价跌量缩（抛压减轻）"
+        elif price_up and not vol_up:
+            volume_price_signal = "缩量上涨（持续性存疑）"
+        elif not price_up and vol_up:
+            volume_price_signal = "放量下跌（主力出货或洗盘）"
+        else:
+            volume_price_signal = "量价中性"
+
+        # === 资金流向 ===
+        fund_direction = "数据暂无"
+        net_inflow = "N/A"
+        try:
+            market = "sh" if symbol.startswith(("60", "68")) else "sz"
+            fund_df = ak.stock_individual_fund_flow(stock=symbol, market=market)
+            if not fund_df.empty:
+                inflow_str = fund_df.iloc[0]['主力净流入-净额']
+                if isinstance(inflow_str, str) and '万' in inflow_str:
+                    net_inflow_val = float(inflow_str.replace('万', '').replace(',', ''))
+                    net_inflow = f"{net_inflow_val:.1f}"
+                    fund_direction = "资金净流入" if net_inflow_val > 0 else "资金净流出"
+        except Exception:
+            pass
 
         return {
             "symbol": symbol,
@@ -76,7 +104,10 @@ def get_stock_data(symbol):
             "volume": int(latest['volume']),
             "rsi": round(rsi, 2) if isinstance(rsi, float) else rsi,
             "ma20": round(ma20, 2) if isinstance(ma20, float) else ma20,
-            "last_5_days": close_prices.tail(5).round(2).tolist()
+            "last_5_days": close_prices.tail(5).round(2).tolist(),
+            "volume_price_signal": volume_price_signal,
+            "fund_direction": fund_direction,
+            "net_inflow": net_inflow,
         }
 
     except Exception:
@@ -84,25 +115,27 @@ def get_stock_data(symbol):
 
 def generate_analysis(data):
     prompt = f"""
-你是一位专业的中文股票分析师，请根据以下数据生成一段150字以内的简明分析：
+你是一位资深中文股票分析师，请基于以下多维数据生成150字以内简明分析：
+
 - 股票代码: {data['symbol']}
-- 当前价格: ¥{data['price']}
-- 近5日收盘价: {data['last_5_days']}
-- RSI指标: {data['rsi']}（>70超买，<30超卖）
+- 当前价格: ¥{data['price']} | 涨跌幅: {data['change_pct']}%
+- 近5日走势: {data['last_5_days']}
+- 量价关系: {data['volume_price_signal']}
+- 资金流向: {data['fund_direction']}（净流入/出: {data['net_inflow']}万）
+- RSI: {data['rsi']}（>70超买，<30超卖）
 - 20日均线: {data['ma20']}
-- 今日涨跌幅: {data['change_pct']}%
 
 要求：
-1. 用中文回答，语气专业但易懂；
-2. 包含趋势判断（如“短期偏强”、“震荡整理”）；
-3. 提示风险（如“RSI接近超买区，注意回调”）；
-4. 不要提及“AI”、“模型”等词。
+1. 优先解读「量价配合」和「主力资金动向」；
+2. 判断当前是「吸筹」「拉升」「派发」还是「洗盘」阶段；
+3. 给出操作建议（如“可逢低布局”、“警惕高位放量滞涨”）；
+4. 语言专业简洁，避免术语堆砌，不提“AI”或“模型”。
 """
     try:
         response = Generation.call(
             model="qwen-max",
             prompt=prompt,
-            max_tokens=200
+            max_tokens=250
         )
         if response.status_code == 200:
             return response.output.text.strip()
@@ -113,21 +146,5 @@ def generate_analysis(data):
 
 def main():
     os.makedirs("output", exist_ok=True)
-
     results = []
-    for symbol in STOCKS:
-        data = get_stock_data(symbol)
-        if data:
-            analysis = generate_analysis(data)
-            data["analysis"] = analysis
-            results.append(data)
-
-    output = {
-        "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "stocks": results
-    }
-    with open("output/predictions.json", "w", encoding="utf-8") as f:
-        json.dump(output, f, ensure_ascii=False, indent=2)
-
-if __name__ == "__main__":
-    main()
+    for symbol in STOC
