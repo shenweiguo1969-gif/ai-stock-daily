@@ -20,6 +20,22 @@ def load_stock_list():
         ]
     return stocks
 
+def load_stock_name_map():
+    """加载A股代码 -> 名称映射表"""
+    try:
+        df = ak.stock_info_a_code_name()
+        # 兼容不同版本 akshare 的列名
+        if 'code' in df.columns and 'name' in df.columns:
+            return dict(zip(df['code'], df['name']))
+        elif '证券代码' in df.columns and '证券简称' in df.columns:
+            return dict(zip(df['证券代码'], df['证券简称']))
+        else:
+            print("⚠️ 股票名称数据格式异常，使用空映射")
+            return {}
+    except Exception as e:
+        print(f"⚠️ 股票名称加载失败: {e}")
+        return {}
+
 STOCKS = load_stock_list()
 
 def calculate_rsi(prices, window=14):
@@ -82,7 +98,7 @@ def get_stock_data(symbol):
         else:
             volume_price_signal = "量价中性"
 
-        # === 【核心升级】基于量价结构推断主力行为 ===
+        # === 主力行为推断（基于量价）===
         def infer_main_force_behavior(df):
             closes = df['close'].tail(5).tolist()
             vols = df['volume'].tail(5).tolist()
@@ -93,12 +109,8 @@ def get_stock_data(symbol):
             latest_vol = vols[-1]
             avg_vol_5d = sum(vols) / 5
             high_vol = latest_vol > avg_vol_5d * 1.5
-            low_vol = latest_vol < avg_vol_5d * 0.7
 
-            # 近5日涨幅
             pct_5d = (latest_close - closes[0]) / closes[0] if closes[0] != 0 else 0
-
-            # 特征判断
             is_new_high = latest_close == max(closes)
             recent_pullback = len(closes) >= 3 and closes[-2] < closes[-3] and latest_close > closes[-2]
             pullback_low_vol = len(vols) >= 2 and vols[-2] < avg_vol_5d * 0.7
@@ -113,7 +125,7 @@ def get_stock_data(symbol):
                 return "放量下跌（警惕派发风险）"
             elif latest_close > closes[-2] and high_vol:
                 return "放量上涨（主力积极介入）"
-            elif latest_close > ma20 and low_vol and price_up:
+            elif latest_close > ma20 and latest_vol < avg_vol_5d * 0.8 and price_up:
                 return "温和推升（惜售明显）"
             else:
                 return "震荡整理（方向待明）"
@@ -129,17 +141,20 @@ def get_stock_data(symbol):
             "ma20": round(ma20, 2) if isinstance(ma20, float) else ma20,
             "last_5_days": close_prices.tail(5).round(2).tolist(),
             "volume_price_signal": volume_price_signal,
-            "main_force_signal": main_force_signal,  # 替代资金流
+            "main_force_signal": main_force_signal,
         }
 
     except Exception:
         return None
 
 def generate_analysis(data):
+    # 构建带股票名称的提示词
+    stock_display = f"{data['name']}（{data['symbol']}）" if data.get('name') and data['name'] != "未知名称" else data['symbol']
+    
     prompt = f"""
 你是一位资深中文股票分析师，请基于以下多维数据生成150字以内简明分析：
 
-- 股票代码: {data['symbol']}
+- 股票: {stock_display}
 - 当前价格: ¥{data['price']} | 涨跌幅: {data['change_pct']}%
 - 近5日走势: {data['last_5_days']}
 - 量价关系: {data['volume_price_signal']}
@@ -148,10 +163,10 @@ def generate_analysis(data):
 - 20日均线: {data['ma20']}
 
 要求：
-1. 重点结合「量价配合」和「主力行为阶段」进行研判；
-2. 明确指出当前处于「吸筹」「拉升」「洗盘」还是「派发」阶段；
+1. 分析中需自然提及股票名称（如“XX股份”）；
+2. 重点结合量价与主力行为判断当前阶段（吸筹/拉升/洗盘/派发）；
 3. 给出具体操作建议（如“可逢低布局”、“警惕高位放量滞涨”）；
-4. 语言专业简洁，避免空泛表述，不提“AI”或“模型”。
+4. 语言专业简洁，避免空泛，不提“AI”或“模型”。
 """
     for retry in range(3):
         try:
@@ -177,9 +192,13 @@ def generate_analysis(data):
 
 def main():
     os.makedirs("output", exist_ok=True)
+    
+    # ✅ 加载股票名称映射（仅一次）
+    print("📥 正在加载股票名称映射...")
+    stock_name_map = load_stock_name_map()
+    
     results = []
     total = len(STOCKS)
-
     print(f"🚀 开始分析 {total} 只股票...\n")
 
     for i, symbol in enumerate(STOCKS, 1):
@@ -190,11 +209,14 @@ def main():
                 print(f"  ⚠️  {symbol} 行情数据获取失败，跳过")
                 continue
 
+            # ✅ 添加股票名称
+            data["name"] = stock_name_map.get(symbol, "未知名称")
+
             analysis = generate_analysis(data)
             data["analysis"] = analysis
             results.append(data)
 
-            time.sleep(0.3)  # 防止 API 限流
+            time.sleep(0.3)
 
         except Exception as e:
             print(f"  ❌ {symbol} 处理异常: {e}")
