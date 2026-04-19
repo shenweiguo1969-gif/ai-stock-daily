@@ -1,24 +1,4 @@
 {
-  "generated_at": "2026-04-18 04:31:57",
-  "stocks": [
-    {
-      "symbol": "002734",
-      "price": 17.25,
-      "change_pct": -3.2,
-      "volume": 324696,
-      "rsi": 46.07,
-      "ma20": 17.54,
-      "last_5_days": [
-        17.27,
-        17.19,
-        17.17,
-        17.82,
-        17.25
-      ],
-      "volume_price_signal": "放量下跌（主力出货或洗盘）",
-      "main_force_signal": "震荡整理（方向待明）",
-      "name": "未知名称",
-      "analysis": "API错误(403)"
-    }
-  ]
+  "generated_at": "2026-04-19 04:49:52",
+  "stocks": []
 }
