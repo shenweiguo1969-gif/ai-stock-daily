@@ -1,43 +1,4 @@
 {
-  "generated_at": "2026-04-26 04:58:14",
-  "stocks": [
-    {
-      "symbol": "002734",
-      "price": 17.83,
-      "change_pct": 1.6,
-      "volume": 428359,
-      "rsi": 58.65,
-      "ma20": 17.57,
-      "last_5_days": [
-        17.55,
-        17.39,
-        17.37,
-        17.55,
-        17.83
-      ],
-      "volume_price_signal": "价涨量增（趋势健康）",
-      "main_force_signal": "放量上涨（主力积极介入）",
-      "name": "未知名称",
-      "analysis": "API错误(403)"
-    },
-    {
-      "symbol": "300170",
-      "price": 21.0,
-      "change_pct": -0.9,
-      "volume": 557030,
-      "rsi": 68.82,
-      "ma20": 20.26,
-      "last_5_days": [
-        21.71,
-        21.17,
-        21.64,
-        21.19,
-        21.0
-      ],
-      "volume_price_signal": "价跌量缩（抛压减轻）",
-      "main_force_signal": "震荡整理（方向待明）",
-      "name": "未知名称",
-      "analysis": "API错误(403)"
-    }
-  ]
+  "generated_at": "2026-04-27 05:22:10",
+  "stocks": []
 }
