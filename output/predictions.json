@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-02 04:54:36",
+  "generated_at": "2026-05-03 05:24:56",
   "stocks": [
     {
       "symbol": "000612",
@@ -21,6 +21,44 @@
       "analysis": "API错误(401)"
     },
     {
+      "symbol": "600550",
+      "price": 14.95,
+      "change_pct": -1.32,
+      "volume": 320582,
+      "rsi": 45.18,
+      "ma20": 15.36,
+      "last_5_days": [
+        15.02,
+        15.19,
+        15.03,
+        15.15,
+        14.95
+      ],
+      "volume_price_signal": "价跌量缩（抛压减轻）",
+      "main_force_signal": "低位吸筹（横盘缩量）",
+      "name": "未知名称",
+      "analysis": "API错误(401)"
+    },
+    {
+      "symbol": "600428",
+      "price": 8.56,
+      "change_pct": -0.23,
+      "volume": 367870,
+      "rsi": 34.55,
+      "ma20": 9.07,
+      "last_5_days": [
+        9.0,
+        8.92,
+        9.03,
+        8.58,
+        8.56
+      ],
+      "volume_price_signal": "价跌量缩（抛压减轻）",
+      "main_force_signal": "震荡整理（方向待明）",
+      "name": "未知名称",
+      "analysis": "API错误(401)"
+    },
+    {
       "symbol": "600019",
       "price": 6.31,
       "change_pct": -2.62,
@@ -33,6 +71,101 @@
         6.37,
         6.48,
         6.31
+      ],
+      "volume_price_signal": "放量下跌（主力出货或洗盘）",
+      "main_force_signal": "震荡整理（方向待明）",
+      "name": "未知名称",
+      "analysis": "API错误(401)"
+    },
+    {
+      "symbol": "000001",
+      "price": 11.49,
+      "change_pct": -0.26,
+      "volume": 1139242,
+      "rsi": 68.18,
+      "ma20": 11.17,
+      "last_5_days": [
+        11.0,
+        11.38,
+        11.46,
+        11.52,
+        11.49
+      ],
+      "volume_price_signal": "价跌量缩（抛压减轻）",
+      "main_force_signal": "震荡整理（方向待明）",
+      "name": "未知名称",
+      "analysis": "API错误(401)"
+    },
+    {
+      "symbol": "399006",
+      "price": 3677.15,
+      "change_pct": -0.27,
+      "volume": 207981816,
+      "rsi": 67.59,
+      "ma20": 3528.72,
+      "last_5_days": [
+        3667.79,
+        3648.79,
+        3596.71,
+        3687.17,
+        3677.15
+      ],
+      "volume_price_signal": "价跌量缩（抛压减轻）",
+      "main_force_signal": "低位吸筹（横盘缩量）",
+      "name": "未知名称",
+      "analysis": "API错误(401)"
+    },
+    {
+      "symbol": "399106",
+      "price": 2776.23,
+      "change_pct": 0.13,
+      "volume": 737703743,
+      "rsi": 69.68,
+      "ma20": 2691.34,
+      "last_5_days": [
+        2743.05,
+        2756.68,
+        2727.23,
+        2772.5,
+        2776.23
+      ],
+      "volume_price_signal": "价涨量增（趋势健康）",
+      "main_force_signal": "震荡整理（方向待明）",
+      "name": "未知名称",
+      "analysis": "API错误(401)"
+    },
+    {
+      "symbol": "000688",
+      "price": 51.48,
+      "change_pct": 4.34,
+      "volume": 247022,
+      "rsi": 70.21,
+      "ma20": 43.76,
+      "last_5_days": [
+        43.91,
+        45.86,
+        45.88,
+        49.34,
+        51.48
+      ],
+      "volume_price_signal": "缩量上涨（持续性存疑）",
+      "main_force_signal": "震荡整理（方向待明）",
+      "name": "未知名称",
+      "analysis": "API错误(401)"
+    },
+    {
+      "symbol": "899050",
+      "price": 1330.09,
+      "change_pct": -0.12,
+      "volume": 7914658,
+      "rsi": 54.29,
+      "ma20": 1336.32,
+      "last_5_days": [
+        1370.22,
+        1361.47,
+        1325.39,
+        1331.74,
+        1330.09
       ],
       "volume_price_signal": "放量下跌（主力出货或洗盘）",
       "main_force_signal": "震荡整理（方向待明）",
