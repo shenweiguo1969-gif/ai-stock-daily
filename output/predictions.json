@@ -1,21 +1,40 @@
 {
-  "generated_at": "2026-05-06 05:28:29",
+  "generated_at": "2026-05-07 05:30:41",
   "stocks": [
     {
-      "symbol": "002734",
-      "price": 18.13,
-      "change_pct": 0.55,
-      "volume": 197174,
-      "rsi": 65.03,
-      "ma20": 17.65,
+      "symbol": "399006",
+      "price": 3820.05,
+      "change_pct": 1.11,
+      "volume": 183187151,
+      "rsi": 69.17,
+      "ma20": 3592.52,
       "last_5_days": [
-        18.15,
-        18.07,
-        18.0,
-        18.03,
-        18.13
+        3596.71,
+        3687.17,
+        3677.15,
+        3778.16,
+        3820.05
       ],
-      "volume_price_signal": "价涨量增（趋势健康）",
+      "volume_price_signal": "缩量上涨（持续性存疑）",
+      "main_force_signal": "震荡整理（方向待明）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    },
+    {
+      "symbol": "000688",
+      "price": 47.68,
+      "change_pct": -6.12,
+      "volume": 299607,
+      "rsi": 54.6,
+      "ma20": 44.71,
+      "last_5_days": [
+        45.88,
+        49.34,
+        51.48,
+        50.79,
+        47.68
+      ],
+      "volume_price_signal": "放量下跌（主力出货或洗盘）",
       "main_force_signal": "震荡整理（方向待明）",
       "name": "未知名称",
       "analysis": "API错误(403)"
