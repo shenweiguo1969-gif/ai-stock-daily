@@ -1,38 +1,76 @@
 {
-  "generated_at": "2026-05-14 05:46:17",
+  "generated_at": "2026-05-15 05:53:58",
   "stocks": [
     {
-      "symbol": "301338",
-      "price": 209.2,
-      "change_pct": 1.96,
-      "volume": 33449,
-      "rsi": 61.62,
-      "ma20": 189.48,
+      "symbol": "300170",
+      "price": 21.84,
+      "change_pct": -0.05,
+      "volume": 580585,
+      "rsi": 51.15,
+      "ma20": 21.58,
       "last_5_days": [
-        211.08,
-        200.95,
-        200.23,
-        205.18,
-        209.2
+        23.2,
+        22.49,
+        23.16,
+        21.85,
+        21.84
       ],
-      "volume_price_signal": "缩量上涨（持续性存疑）",
-      "main_force_signal": "低位吸筹（横盘缩量）",
+      "volume_price_signal": "价跌量缩（抛压减轻）",
+      "main_force_signal": "震荡整理（方向待明）",
       "name": "未知名称",
       "analysis": "API错误(403)"
     },
     {
-      "symbol": "399006",
-      "price": 3984.96,
-      "change_pct": -1.32,
-      "volume": 203921021,
-      "rsi": 68.3,
-      "ma20": 3739.48,
+      "symbol": "300548",
+      "price": 253.13,
+      "change_pct": -5.19,
+      "volume": 148884,
+      "rsi": 36.18,
+      "ma20": 260.86,
       "last_5_days": [
-        3796.13,
-        3928.97,
-        3934.88,
-        4038.33,
-        3984.96
+        275.67,
+        271.8,
+        273.1,
+        266.99,
+        253.13
+      ],
+      "volume_price_signal": "放量下跌（主力出货或洗盘）",
+      "main_force_signal": "震荡整理（方向待明）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    },
+    {
+      "symbol": "301377",
+      "price": 247.23,
+      "change_pct": 9.39,
+      "volume": 72478,
+      "rsi": 55.79,
+      "ma20": 229.7,
+      "last_5_days": [
+        235.35,
+        237.97,
+        236.77,
+        226.0,
+        247.23
+      ],
+      "volume_price_signal": "价涨量增（趋势健康）",
+      "main_force_signal": "震荡整理（方向待明）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    },
+    {
+      "symbol": "003031",
+      "price": 159.73,
+      "change_pct": -3.83,
+      "volume": 162399,
+      "rsi": 76.73,
+      "ma20": 131.15,
+      "last_5_days": [
+        154.08,
+        151.63,
+        150.99,
+        166.09,
+        159.73
       ],
       "volume_price_signal": "价跌量缩（抛压减轻）",
       "main_force_signal": "震荡整理（方向待明）",
