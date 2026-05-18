@@ -1,4 +1,24 @@
 {
-  "generated_at": "2026-05-17 05:47:19",
-  "stocks": []
+  "generated_at": "2026-05-18 06:12:33",
+  "stocks": [
+    {
+      "symbol": "002734",
+      "price": 17.29,
+      "change_pct": 1.47,
+      "volume": 143431,
+      "rsi": 45.83,
+      "ma20": 17.7,
+      "last_5_days": [
+        17.46,
+        17.61,
+        17.3,
+        17.04,
+        17.29
+      ],
+      "volume_price_signal": "价涨量增（趋势健康）",
+      "main_force_signal": "震荡整理（方向待明）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    }
+  ]
 }
