@@ -1,19 +1,76 @@
 {
-  "generated_at": "2026-05-27 06:19:38",
+  "generated_at": "2026-05-28 06:10:39",
   "stocks": [
     {
-      "symbol": "300757",
-      "price": 632.97,
-      "change_pct": 6.03,
-      "volume": 97158,
-      "rsi": 68.12,
-      "ma20": 543.93,
+      "symbol": "301377",
+      "price": 366.47,
+      "change_pct": 5.59,
+      "volume": 60907,
+      "rsi": 88.19,
+      "ma20": 263.35,
       "last_5_days": [
-        524.0,
-        549.5,
-        621.99,
-        597.0,
-        632.97
+        310.63,
+        327.49,
+        327.23,
+        347.08,
+        366.47
+      ],
+      "volume_price_signal": "缩量上涨（持续性存疑）",
+      "main_force_signal": "温和推升（惜售明显）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    },
+    {
+      "symbol": "003031",
+      "price": 151.6,
+      "change_pct": 2.99,
+      "volume": 98171,
+      "rsi": 56.43,
+      "ma20": 149.27,
+      "last_5_days": [
+        158.69,
+        156.88,
+        149.66,
+        147.2,
+        151.6
+      ],
+      "volume_price_signal": "缩量上涨（持续性存疑）",
+      "main_force_signal": "温和推升（惜售明显）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    },
+    {
+      "symbol": "301035",
+      "price": 69.62,
+      "change_pct": -0.14,
+      "volume": 7933,
+      "rsi": 22.53,
+      "ma20": 76.55,
+      "last_5_days": [
+        70.88,
+        69.14,
+        70.61,
+        69.72,
+        69.62
+      ],
+      "volume_price_signal": "价跌量缩（抛压减轻）",
+      "main_force_signal": "低位吸筹（横盘缩量）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    },
+    {
+      "symbol": "300620",
+      "price": 293.02,
+      "change_pct": 12.77,
+      "volume": 249364,
+      "rsi": 60.55,
+      "ma20": 262.45,
+      "last_5_days": [
+        266.18,
+        272.8,
+        252.98,
+        259.84,
+        293.02
       ],
       "volume_price_signal": "价涨量增（趋势健康）",
       "main_force_signal": "震荡整理（方向待明）",
@@ -21,37 +78,37 @@
       "analysis": "API错误(403)"
     },
     {
-      "symbol": "000001",
-      "price": 10.77,
-      "change_pct": -0.19,
-      "volume": 710769,
-      "rsi": 13.41,
-      "ma20": 11.08,
+      "symbol": "301183",
+      "price": 268.0,
+      "change_pct": 7.18,
+      "volume": 83798,
+      "rsi": 60.34,
+      "ma20": 235.67,
       "last_5_days": [
-        10.7,
-        10.68,
-        10.68,
-        10.79,
-        10.77
+        248.78,
+        261.38,
+        244.95,
+        250.05,
+        268.0
       ],
-      "volume_price_signal": "价跌量缩（抛压减轻）",
+      "volume_price_signal": "价涨量增（趋势健康）",
       "main_force_signal": "震荡整理（方向待明）",
       "name": "未知名称",
       "analysis": "API错误(403)"
     },
     {
-      "symbol": "399006",
-      "price": 4060.12,
-      "change_pct": 0.42,
-      "volume": 201252155,
-      "rsi": 65.24,
-      "ma20": 3871.86,
+      "symbol": "300757",
+      "price": 657.0,
+      "change_pct": 3.79,
+      "volume": 79780,
+      "rsi": 69.48,
+      "ma20": 550.86,
       "last_5_days": [
-        3829.78,
-        3938.5,
-        4021.16,
-        4043.07,
-        4060.12
+        549.5,
+        621.99,
+        597.0,
+        633.01,
+        657.0
       ],
       "volume_price_signal": "缩量上涨（持续性存疑）",
       "main_force_signal": "震荡整理（方向待明）",
@@ -59,21 +116,21 @@
       "analysis": "API错误(403)"
     },
     {
-      "symbol": "399106",
-      "price": 2837.14,
-      "change_pct": -1.22,
-      "volume": 713476193,
-      "rsi": 45.97,
-      "ma20": 2850.7,
+      "symbol": "300308",
+      "price": 1186.12,
+      "change_pct": 6.73,
+      "volume": 230805,
+      "rsi": 81.04,
+      "ma20": 995.9,
       "last_5_days": [
-        2800.37,
-        2862.78,
-        2889.55,
-        2872.32,
-        2837.14
+        1037.98,
+        1093.0,
+        1103.0,
+        1111.37,
+        1186.12
       ],
-      "volume_price_signal": "价跌量缩（抛压减轻）",
-      "main_force_signal": "低位吸筹（横盘缩量）",
+      "volume_price_signal": "缩量上涨（持续性存疑）",
+      "main_force_signal": "震荡整理（方向待明）",
       "name": "未知名称",
       "analysis": "API错误(403)"
     }
