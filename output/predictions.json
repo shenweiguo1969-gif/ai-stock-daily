@@ -1,4 +1,24 @@
 {
-  "generated_at": "2026-05-31 06:10:49",
-  "stocks": []
+  "generated_at": "2026-06-01 06:47:40",
+  "stocks": [
+    {
+      "symbol": "000612",
+      "price": 11.81,
+      "change_pct": 2.16,
+      "volume": 336884,
+      "rsi": 41.65,
+      "ma20": 12.25,
+      "last_5_days": [
+        12.49,
+        12.1,
+        11.82,
+        11.56,
+        11.81
+      ],
+      "volume_price_signal": "缩量上涨（持续性存疑）",
+      "main_force_signal": "震荡整理（方向待明）",
+      "name": "未知名称",
+      "analysis": "API错误(401)"
+    }
+  ]
 }
