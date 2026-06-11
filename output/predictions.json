@@ -1,19 +1,57 @@
 {
-  "generated_at": "2026-06-10 06:22:26",
+  "generated_at": "2026-06-11 06:47:42",
   "stocks": [
     {
       "symbol": "002734",
-      "price": 15.3,
-      "change_pct": -3.77,
-      "volume": 112905,
+      "price": 15.19,
+      "change_pct": -0.85,
+      "volume": 89540,
       "rsi": 37.82,
-      "ma20": 16.56,
+      "ma20": 16.48,
       "last_5_days": [
-        17.23,
         17.33,
         16.25,
         15.9,
-        15.3
+        15.32,
+        15.19
+      ],
+      "volume_price_signal": "价跌量缩（抛压减轻）",
+      "main_force_signal": "震荡整理（方向待明）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    },
+    {
+      "symbol": "600722",
+      "price": 10.82,
+      "change_pct": 9.96,
+      "volume": 1031707,
+      "rsi": 43.47,
+      "ma20": 10.88,
+      "last_5_days": [
+        10.16,
+        10.4,
+        9.49,
+        9.84,
+        10.82
+      ],
+      "volume_price_signal": "价涨量增（趋势健康）",
+      "main_force_signal": "强势拉升（放量突破新高）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    },
+    {
+      "symbol": "899050",
+      "price": 1255.77,
+      "change_pct": -3.07,
+      "volume": 8458491,
+      "rsi": 40.26,
+      "ma20": 1298.41,
+      "last_5_days": [
+        1299.07,
+        1316.31,
+        1337.93,
+        1295.6,
+        1255.77
       ],
       "volume_price_signal": "价跌量缩（抛压减轻）",
       "main_force_signal": "震荡整理（方向待明）",
