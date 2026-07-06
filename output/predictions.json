@@ -1,4 +1,100 @@
 {
-  "generated_at": "2026-07-05 06:03:00",
-  "stocks": []
+  "generated_at": "2026-07-06 06:26:58",
+  "stocks": [
+    {
+      "symbol": "002734",
+      "price": 17.68,
+      "change_pct": 3.82,
+      "volume": 230835,
+      "rsi": 67.38,
+      "ma20": 17.05,
+      "last_5_days": [
+        17.17,
+        17.65,
+        17.48,
+        17.03,
+        17.68
+      ],
+      "volume_price_signal": "价涨量增（趋势健康）",
+      "main_force_signal": "震荡整理（方向待明）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    },
+    {
+      "symbol": "600722",
+      "price": 8.2,
+      "change_pct": -1.32,
+      "volume": 160409,
+      "rsi": 26.94,
+      "ma20": 9.03,
+      "last_5_days": [
+        8.12,
+        8.36,
+        8.44,
+        8.31,
+        8.2
+      ],
+      "volume_price_signal": "价跌量缩（抛压减轻）",
+      "main_force_signal": "低位吸筹（横盘缩量）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    },
+    {
+      "symbol": "300170",
+      "price": 14.52,
+      "change_pct": -3.33,
+      "volume": 321456,
+      "rsi": 26.48,
+      "ma20": 16.62,
+      "last_5_days": [
+        15.24,
+        15.68,
+        15.31,
+        15.02,
+        14.52
+      ],
+      "volume_price_signal": "价跌量缩（抛压减轻）",
+      "main_force_signal": "震荡整理（方向待明）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    },
+    {
+      "symbol": "300548",
+      "price": 213.72,
+      "change_pct": -3.3,
+      "volume": 116208,
+      "rsi": 35.5,
+      "ma20": 254.34,
+      "last_5_days": [
+        278.0,
+        254.0,
+        222.0,
+        221.01,
+        213.72
+      ],
+      "volume_price_signal": "价跌量缩（抛压减轻）",
+      "main_force_signal": "震荡整理（方向待明）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    },
+    {
+      "symbol": "301377",
+      "price": 490.09,
+      "change_pct": -5.4,
+      "volume": 49285,
+      "rsi": 41.31,
+      "ma20": 540.23,
+      "last_5_days": [
+        550.9,
+        555.3,
+        531.0,
+        518.04,
+        490.09
+      ],
+      "volume_price_signal": "价跌量缩（抛压减轻）",
+      "main_force_signal": "震荡整理（方向待明）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    }
+  ]
 }
