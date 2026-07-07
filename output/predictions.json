@@ -1,76 +1,19 @@
 {
-  "generated_at": "2026-07-06 06:26:58",
+  "generated_at": "2026-07-07 06:06:25",
   "stocks": [
     {
-      "symbol": "002734",
-      "price": 17.68,
-      "change_pct": 3.82,
-      "volume": 230835,
-      "rsi": 67.38,
-      "ma20": 17.05,
-      "last_5_days": [
-        17.17,
-        17.65,
-        17.48,
-        17.03,
-        17.68
-      ],
-      "volume_price_signal": "价涨量增（趋势健康）",
-      "main_force_signal": "震荡整理（方向待明）",
-      "name": "未知名称",
-      "analysis": "API错误(403)"
-    },
-    {
-      "symbol": "600722",
-      "price": 8.2,
-      "change_pct": -1.32,
-      "volume": 160409,
-      "rsi": 26.94,
-      "ma20": 9.03,
-      "last_5_days": [
-        8.12,
-        8.36,
-        8.44,
-        8.31,
-        8.2
-      ],
-      "volume_price_signal": "价跌量缩（抛压减轻）",
-      "main_force_signal": "低位吸筹（横盘缩量）",
-      "name": "未知名称",
-      "analysis": "API错误(403)"
-    },
-    {
-      "symbol": "300170",
-      "price": 14.52,
-      "change_pct": -3.33,
-      "volume": 321456,
-      "rsi": 26.48,
-      "ma20": 16.62,
-      "last_5_days": [
-        15.24,
-        15.68,
-        15.31,
-        15.02,
-        14.52
-      ],
-      "volume_price_signal": "价跌量缩（抛压减轻）",
-      "main_force_signal": "震荡整理（方向待明）",
-      "name": "未知名称",
-      "analysis": "API错误(403)"
-    },
-    {
       "symbol": "300548",
-      "price": 213.72,
-      "change_pct": -3.3,
-      "volume": 116208,
-      "rsi": 35.5,
-      "ma20": 254.34,
+      "price": 210.88,
+      "change_pct": -1.52,
+      "volume": 83286,
+      "rsi": 29.71,
+      "ma20": 254.26,
       "last_5_days": [
-        278.0,
         254.0,
         222.0,
         221.01,
-        213.72
+        214.13,
+        210.88
       ],
       "volume_price_signal": "价跌量缩（抛压减轻）",
       "main_force_signal": "震荡整理（方向待明）",
@@ -79,17 +22,36 @@
     },
     {
       "symbol": "301377",
-      "price": 490.09,
-      "change_pct": -5.4,
-      "volume": 49285,
-      "rsi": 41.31,
-      "ma20": 540.23,
+      "price": 488.47,
+      "change_pct": 0.51,
+      "volume": 32497,
+      "rsi": 41.25,
+      "ma20": 543.22,
       "last_5_days": [
-        550.9,
         555.3,
         531.0,
         518.04,
-        490.09
+        486.0,
+        488.47
+      ],
+      "volume_price_signal": "缩量上涨（持续性存疑）",
+      "main_force_signal": "震荡整理（方向待明）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    },
+    {
+      "symbol": "003031",
+      "price": 148.07,
+      "change_pct": -2.13,
+      "volume": 56574,
+      "rsi": 44.44,
+      "ma20": 165.68,
+      "last_5_days": [
+        172.78,
+        159.4,
+        156.98,
+        151.29,
+        148.07
       ],
       "volume_price_signal": "价跌量缩（抛压减轻）",
       "main_force_signal": "震荡整理（方向待明）",
