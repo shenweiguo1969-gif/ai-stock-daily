@@ -1,4 +1,24 @@
 {
-  "generated_at": "2026-07-16 04:58:42",
-  "stocks": []
+  "generated_at": "2026-07-17 05:12:36",
+  "stocks": [
+    {
+      "symbol": "399006",
+      "price": 3477.44,
+      "change_pct": -5.82,
+      "volume": 152435201,
+      "rsi": 26.86,
+      "ma20": 4017.14,
+      "last_5_days": [
+        3723.52,
+        3851.14,
+        3804.7,
+        3692.46,
+        3477.44
+      ],
+      "volume_price_signal": "价跌量缩（抛压减轻）",
+      "main_force_signal": "震荡整理（方向待明）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    }
+  ]
 }
