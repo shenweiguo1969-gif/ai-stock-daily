@@ -1,4 +1,24 @@
 {
-  "generated_at": "2026-07-23 05:22:48",
-  "stocks": []
+  "generated_at": "2026-07-24 05:18:58",
+  "stocks": [
+    {
+      "symbol": "300308",
+      "price": 1055.09,
+      "change_pct": -1.63,
+      "volume": 152531,
+      "rsi": 47.09,
+      "ma20": 1124.65,
+      "last_5_days": [
+        1004.0,
+        1136.55,
+        1060.8,
+        1072.52,
+        1055.09
+      ],
+      "volume_price_signal": "价跌量缩（抛压减轻）",
+      "main_force_signal": "震荡整理（方向待明）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    }
+  ]
 }
