@@ -1,4 +1,328 @@
 {
-  "generated_at": "2026-07-28 05:13:18",
-  "stocks": []
+  "generated_at": "2026-07-29 05:20:44",
+  "stocks": [
+    {
+      "symbol": "002734",
+      "price": 13.3,
+      "change_pct": 0.68,
+      "volume": 68964,
+      "rsi": 29.34,
+      "ma20": 14.83,
+      "last_5_days": [
+        13.19,
+        12.73,
+        13.12,
+        13.21,
+        13.3
+      ],
+      "volume_price_signal": "缩量上涨（持续性存疑）",
+      "main_force_signal": "低位吸筹（横盘缩量）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    },
+    {
+      "symbol": "600722",
+      "price": 10.19,
+      "change_pct": 10.04,
+      "volume": 522088,
+      "rsi": 63.71,
+      "ma20": 8.85,
+      "last_5_days": [
+        10.9,
+        11.43,
+        10.29,
+        9.26,
+        10.19
+      ],
+      "volume_price_signal": "价涨量增（趋势健康）",
+      "main_force_signal": "温和推升（惜售明显）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    },
+    {
+      "symbol": "300170",
+      "price": 14.49,
+      "change_pct": 1.33,
+      "volume": 282609,
+      "rsi": 45.85,
+      "ma20": 14.76,
+      "last_5_days": [
+        14.7,
+        13.82,
+        14.31,
+        14.3,
+        14.49
+      ],
+      "volume_price_signal": "缩量上涨（持续性存疑）",
+      "main_force_signal": "低位吸筹（横盘缩量）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    },
+    {
+      "symbol": "300548",
+      "price": 141.56,
+      "change_pct": -4.14,
+      "volume": 143001,
+      "rsi": 21.39,
+      "ma20": 191.11,
+      "last_5_days": [
+        169.07,
+        163.01,
+        167.7,
+        147.67,
+        141.56
+      ],
+      "volume_price_signal": "价跌量缩（抛压减轻）",
+      "main_force_signal": "震荡整理（方向待明）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    },
+    {
+      "symbol": "301377",
+      "price": 356.01,
+      "change_pct": -4.51,
+      "volume": 30873,
+      "rsi": 32.71,
+      "ma20": 443.47,
+      "last_5_days": [
+        402.1,
+        396.6,
+        414.38,
+        372.81,
+        356.01
+      ],
+      "volume_price_signal": "价跌量缩（抛压减轻）",
+      "main_force_signal": "震荡整理（方向待明）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    },
+    {
+      "symbol": "003031",
+      "price": 96.55,
+      "change_pct": -3.72,
+      "volume": 78003,
+      "rsi": 20.75,
+      "ma20": 125.61,
+      "last_5_days": [
+        107.59,
+        106.0,
+        108.51,
+        100.28,
+        96.55
+      ],
+      "volume_price_signal": "价跌量缩（抛压减轻）",
+      "main_force_signal": "震荡整理（方向待明）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    },
+    {
+      "symbol": "301338",
+      "price": 82.42,
+      "change_pct": -5.3,
+      "volume": 40574,
+      "rsi": 22.64,
+      "ma20": 112.06,
+      "last_5_days": [
+        93.83,
+        91.89,
+        94.56,
+        87.03,
+        82.42
+      ],
+      "volume_price_signal": "放量下跌（主力出货或洗盘）",
+      "main_force_signal": "震荡整理（方向待明）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    },
+    {
+      "symbol": "301035",
+      "price": 55.15,
+      "change_pct": 1.1,
+      "volume": 14351,
+      "rsi": 92.25,
+      "ma20": 49.48,
+      "last_5_days": [
+        52.08,
+        51.81,
+        53.61,
+        54.55,
+        55.15
+      ],
+      "volume_price_signal": "缩量上涨（持续性存疑）",
+      "main_force_signal": "温和推升（惜售明显）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    },
+    {
+      "symbol": "300620",
+      "price": 207.4,
+      "change_pct": -3.39,
+      "volume": 73144,
+      "rsi": 25.46,
+      "ma20": 265.6,
+      "last_5_days": [
+        229.42,
+        230.05,
+        240.2,
+        214.68,
+        207.4
+      ],
+      "volume_price_signal": "价跌量缩（抛压减轻）",
+      "main_force_signal": "震荡整理（方向待明）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    },
+    {
+      "symbol": "301183",
+      "price": 152.45,
+      "change_pct": -6.07,
+      "volume": 40486,
+      "rsi": 22.48,
+      "ma20": 195.48,
+      "last_5_days": [
+        181.22,
+        180.5,
+        182.18,
+        162.3,
+        152.45
+      ],
+      "volume_price_signal": "价跌量缩（抛压减轻）",
+      "main_force_signal": "震荡整理（方向待明）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    },
+    {
+      "symbol": "300757",
+      "price": 400.0,
+      "change_pct": -0.99,
+      "volume": 66872,
+      "rsi": 31.2,
+      "ma20": 459.12,
+      "last_5_days": [
+        420.7,
+        411.96,
+        427.12,
+        404.0,
+        400.0
+      ],
+      "volume_price_signal": "价跌量缩（抛压减轻）",
+      "main_force_signal": "震荡整理（方向待明）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    },
+    {
+      "symbol": "300308",
+      "price": 930.53,
+      "change_pct": 2.48,
+      "volume": 348291,
+      "rsi": 35.12,
+      "ma20": 1084.34,
+      "last_5_days": [
+        1072.52,
+        1046.51,
+        1076.94,
+        908.0,
+        930.53
+      ],
+      "volume_price_signal": "缩量上涨（持续性存疑）",
+      "main_force_signal": "震荡整理（方向待明）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    },
+    {
+      "symbol": "000001",
+      "price": 11.29,
+      "change_pct": 0.8,
+      "volume": 1146868,
+      "rsi": 80.77,
+      "ma20": 10.76,
+      "last_5_days": [
+        11.08,
+        11.1,
+        11.11,
+        11.2,
+        11.29
+      ],
+      "volume_price_signal": "价涨量增（趋势健康）",
+      "main_force_signal": "震荡整理（方向待明）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    },
+    {
+      "symbol": "399006",
+      "price": 3349.88,
+      "change_pct": 0.69,
+      "volume": 149710918,
+      "rsi": 30.59,
+      "ma20": 3706.23,
+      "last_5_days": [
+        3575.52,
+        3480.87,
+        3590.79,
+        3327.03,
+        3349.88
+      ],
+      "volume_price_signal": "缩量上涨（持续性存疑）",
+      "main_force_signal": "震荡整理（方向待明）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    },
+    {
+      "symbol": "399106",
+      "price": 2418.0,
+      "change_pct": 0.31,
+      "volume": 486429813,
+      "rsi": 31.38,
+      "ma20": 2571.78,
+      "last_5_days": [
+        2483.17,
+        2419.23,
+        2490.11,
+        2410.42,
+        2418.0
+      ],
+      "volume_price_signal": "缩量上涨（持续性存疑）",
+      "main_force_signal": "震荡整理（方向待明）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    },
+    {
+      "symbol": "000688",
+      "price": 28.83,
+      "change_pct": 3.97,
+      "volume": 187012,
+      "rsi": 37.36,
+      "ma20": 30.17,
+      "last_5_days": [
+        29.24,
+        27.74,
+        28.32,
+        27.73,
+        28.83
+      ],
+      "volume_price_signal": "价涨量增（趋势健康）",
+      "main_force_signal": "震荡整理（方向待明）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    },
+    {
+      "symbol": "899050",
+      "price": 1064.82,
+      "change_pct": 0.9,
+      "volume": 5398786,
+      "rsi": 28.2,
+      "ma20": 1136.49,
+      "last_5_days": [
+        1075.02,
+        1031.72,
+        1055.92,
+        1055.27,
+        1064.82
+      ],
+      "volume_price_signal": "缩量上涨（持续性存疑）",
+      "main_force_signal": "低位吸筹（横盘缩量）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    }
+  ]
 }
