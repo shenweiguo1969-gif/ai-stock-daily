@@ -1,4 +1,24 @@
 {
-  "generated_at": "2026-08-23 02:59:53",
-  "stocks": []
+  "generated_at": "2026-08-24 03:00:29",
+  "stocks": [
+    {
+      "symbol": "899050",
+      "price": 1063.01,
+      "change_pct": -1.15,
+      "volume": 3875162,
+      "rsi": 43.01,
+      "ma20": 1094.18,
+      "last_5_days": [
+        1137.89,
+        1082.19,
+        1081.58,
+        1075.38,
+        1063.01
+      ],
+      "volume_price_signal": "价跌量缩（抛压减轻）",
+      "main_force_signal": "震荡整理（方向待明）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    }
+  ]
 }
