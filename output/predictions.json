@@ -1,24 +1,4 @@
 {
-  "generated_at": "2026-08-26 03:01:48",
-  "stocks": [
-    {
-      "symbol": "002734",
-      "price": 15.09,
-      "change_pct": 1.21,
-      "volume": 90204,
-      "rsi": 34.32,
-      "ma20": 15.01,
-      "last_5_days": [
-        14.7,
-        14.58,
-        14.59,
-        14.91,
-        15.09
-      ],
-      "volume_price_signal": "缩量上涨（持续性存疑）",
-      "main_force_signal": "温和推升（惜售明显）",
-      "name": "未知名称",
-      "analysis": "API错误(403)"
-    }
-  ]
+  "generated_at": "2026-08-27 12:20:26",
+  "stocks": []
 }
