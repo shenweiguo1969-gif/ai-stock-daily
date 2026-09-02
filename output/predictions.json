@@ -1,4 +1,62 @@
 {
-  "generated_at": "2026-09-01 07:15:29",
-  "stocks": []
+  "generated_at": "2026-09-02 06:47:56",
+  "stocks": [
+    {
+      "symbol": "000001",
+      "price": 11.92,
+      "change_pct": 0.0,
+      "volume": 836032,
+      "rsi": 74.81,
+      "ma20": 11.43,
+      "last_5_days": [
+        11.59,
+        11.65,
+        11.72,
+        11.92,
+        11.92
+      ],
+      "volume_price_signal": "价跌量缩（抛压减轻）",
+      "main_force_signal": "震荡整理（方向待明）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    },
+    {
+      "symbol": "000688",
+      "price": 28.74,
+      "change_pct": -3.88,
+      "volume": 230951,
+      "rsi": 38.54,
+      "ma20": 31.55,
+      "last_5_days": [
+        31.01,
+        31.5,
+        31.8,
+        29.9,
+        28.74
+      ],
+      "volume_price_signal": "价跌量缩（抛压减轻）",
+      "main_force_signal": "震荡整理（方向待明）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    },
+    {
+      "symbol": "899050",
+      "price": 1107.64,
+      "change_pct": 2.6,
+      "volume": 14840747,
+      "rsi": 52.22,
+      "ma20": 1092.79,
+      "last_5_days": [
+        1074.96,
+        1063.8,
+        1065.29,
+        1079.59,
+        1107.64
+      ],
+      "volume_price_signal": "价涨量增（趋势健康）",
+      "main_force_signal": "放量上涨（主力积极介入）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    }
+  ]
 }
