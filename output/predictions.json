@@ -1,43 +1,4 @@
 {
-  "generated_at": "2026-09-11 06:59:44",
-  "stocks": [
-    {
-      "symbol": "301183",
-      "price": 246.87,
-      "change_pct": 4.88,
-      "volume": 68046,
-      "rsi": 56.09,
-      "ma20": 228.4,
-      "last_5_days": [
-        242.75,
-        235.69,
-        234.0,
-        235.39,
-        246.87
-      ],
-      "volume_price_signal": "价涨量增（趋势健康）",
-      "main_force_signal": "震荡整理（方向待明）",
-      "name": "未知名称",
-      "analysis": "API错误(403)"
-    },
-    {
-      "symbol": "300757",
-      "price": 629.3,
-      "change_pct": -1.44,
-      "volume": 57743,
-      "rsi": 77.9,
-      "ma20": 561.74,
-      "last_5_days": [
-        631.94,
-        643.8,
-        642.6,
-        638.5,
-        629.3
-      ],
-      "volume_price_signal": "放量下跌（主力出货或洗盘）",
-      "main_force_signal": "震荡整理（方向待明）",
-      "name": "未知名称",
-      "analysis": "API错误(403)"
-    }
-  ]
+  "generated_at": "2026-09-12 06:51:00",
+  "stocks": []
 }
