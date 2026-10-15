@@ -1,4 +1,100 @@
 {
-  "generated_at": "2026-10-14 07:05:32",
-  "stocks": []
+  "generated_at": "2026-10-15 06:56:44",
+  "stocks": [
+    {
+      "symbol": "301377",
+      "price": 273.65,
+      "change_pct": -6.69,
+      "volume": 40529,
+      "rsi": 6.73,
+      "ma20": 359.7,
+      "last_5_days": [
+        309.5,
+        299.73,
+        299.0,
+        293.26,
+        273.65
+      ],
+      "volume_price_signal": "放量下跌（主力出货或洗盘）",
+      "main_force_signal": "震荡整理（方向待明）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    },
+    {
+      "symbol": "003031",
+      "price": 102.73,
+      "change_pct": -4.59,
+      "volume": 78910,
+      "rsi": 14.41,
+      "ma20": 121.68,
+      "last_5_days": [
+        109.99,
+        106.94,
+        109.72,
+        107.67,
+        102.73
+      ],
+      "volume_price_signal": "放量下跌（主力出货或洗盘）",
+      "main_force_signal": "震荡整理（方向待明）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    },
+    {
+      "symbol": "301338",
+      "price": 71.9,
+      "change_pct": -4.72,
+      "volume": 27885,
+      "rsi": 13.96,
+      "ma20": 91.9,
+      "last_5_days": [
+        79.93,
+        77.21,
+        77.89,
+        75.46,
+        71.9
+      ],
+      "volume_price_signal": "放量下跌（主力出货或洗盘）",
+      "main_force_signal": "震荡整理（方向待明）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    },
+    {
+      "symbol": "301035",
+      "price": 44.72,
+      "change_pct": -2.7,
+      "volume": 21189,
+      "rsi": 17.86,
+      "ma20": 50.47,
+      "last_5_days": [
+        48.41,
+        47.86,
+        46.02,
+        45.96,
+        44.72
+      ],
+      "volume_price_signal": "价跌量缩（抛压减轻）",
+      "main_force_signal": "震荡整理（方向待明）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    },
+    {
+      "symbol": "300620",
+      "price": 231.89,
+      "change_pct": -3.76,
+      "volume": 61601,
+      "rsi": 24.61,
+      "ma20": 272.49,
+      "last_5_days": [
+        246.8,
+        239.21,
+        251.41,
+        240.95,
+        231.89
+      ],
+      "volume_price_signal": "放量下跌（主力出货或洗盘）",
+      "main_force_signal": "震荡整理（方向待明）",
+      "name": "未知名称",
+      "analysis": "API错误(403)"
+    }
+  ]
 }
